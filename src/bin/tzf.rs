@@ -47,7 +47,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
     } else if let Some(stdin_order) = cli.stdin_order {
         let (mut stdin, mut stdout) = (io::stdin().lock(), io::stdout().lock());
         let mut line = String::new();
-        while stdin.read_line(&mut line)? != 0 && line.ends_with("\n") {
+        while stdin.read_line(&mut line)? != 0 {
             let mut iter = line.chars().skip(1);
             let i = 1 + iter.position(is_delimiter).expect("Missing delimiter");
             let j = i
@@ -55,7 +55,14 @@ pub fn main() -> Result<(), Box<dyn Error>> {
                 + iter
                     .position(|c| !is_delimiter(c))
                     .expect("Missing second coordinate");
-            let k = line.len() - if line.ends_with("\r\n") { 2 } else { 1 };
+            let k = line.len()
+                - if line.ends_with("\r\n") {
+                    2
+                } else if line.ends_with("\n") {
+                    1
+                } else {
+                    0
+                };
             let (a, b) = (line[0..i].parse::<f64>()?, line[j..k].parse::<f64>()?);
             let (lng, lat) = match stdin_order {
                 StdinOrder::LngLat => (a, b),
