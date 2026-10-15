@@ -36,11 +36,13 @@ doc:
 
 .PHONY: bench
 bench:
-	cargo bench | tee benchmark_result.txt
+	cargo bench > benchmark_result.txt
+	cat benchmark_result.txt
 
 .PHONY: bench-full
 bench-full:
-	cargo bench --no-default-features --features full | tee benchmark_full_result.txt
+	cargo bench --no-default-features --features full > benchmark_full_result.txt
+	cat benchmark_full_result.txt
 
 .PHONY: test-full
 test-full:
